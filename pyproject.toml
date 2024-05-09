@@ -1,0 +1,78 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cape-policy-agent"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [{ name = "True Merrill", email = "truemerrill@gmail.com" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = ["fastapi", "python-dotenv", "sqlmodel", "uvicorn"]
+
+[project.optional-dependencies]
+dev = [
+  "fastapi-cli",
+  "httpx",
+  "mkdocs",
+  "mkdocs-material",
+  "mkdocstrings",
+  "mkdocstrings-python",
+  "pytest",
+  "requests",
+]
+
+[project.urls]
+Documentation = "https://github.com/unknown/cape-policy-agent#readme"
+Issues = "https://github.com/unknown/cape-policy-agent/issues"
+Source = "https://github.com/unknown/cape-policy-agent"
+
+[tool.hatch.version]
+path = "src/cape_policy_agent/__about__.py"
+
+[tool.hatch.envs.default]
+dependencies = ["coverage[toml]>=6.5", "pytest"]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = ["- coverage combine", "coverage report"]
+cov = ["test-cov", "cov-report"]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+[tool.hatch.envs.types]
+dependencies = ["mypy>=1.0.0"]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/cape_policy_agent tests}"
+
+[tool.coverage.run]
+source_pkgs = ["cape_policy_agent", "tests"]
+branch = true
+parallel = true
+omit = ["src/cape_policy_agent/__about__.py"]
+
+[tool.coverage.paths]
+cape_policy_agent = [
+  "src/cape_policy_agent",
+  "*/cape-policy-agent/src/cape_policy_agent",
+]
+tests = ["tests", "*/cape-policy-agent/tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
